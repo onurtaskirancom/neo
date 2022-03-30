@@ -2,14 +2,14 @@ import fetch from "isomorphic-fetch";
 import cookie from "js-cookie";
 import { API } from "../config";
 
-export const signup = (user) => {
+export const signup = user => {
   return fetch(`${API}/signup`, {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: Json.stringify(user),
+    body: JSON.stringify(user)
   })
     .then((response) => {
       return response.json();
@@ -24,7 +24,7 @@ export const signin = user => {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: Json.stringify(user)
+    body: JSON.stringify(user)
   })
     .then((response) => {
       return response.json();
