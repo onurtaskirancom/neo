@@ -33,13 +33,13 @@ exports.create = (req, res) => {
       });
     }
 
-    if (!categories || categories.length == 0) {
+    if (!categories || categories.length === 0) {
       return res.status(400).json({
         error: "At least one category is required",
       });
     }
 
-    if (!tags || tags.length == 0) {
+    if (!tags || tags.length === 0) {
       return res.status(400).json({
         error: "At least one tag is required",
       });
@@ -48,7 +48,7 @@ exports.create = (req, res) => {
     let blog = new Blog();
     blog.title = title;
     blog.body = body;
-    blog.excerpt = smartTrim(body, 320, " ", "...");
+    blog.excerpt = smartTrim(body, 320, " ", " ...");
     blog.slug = slugify(title).toLowerCase();
     blog.mtitle = `${title} | ${process.env.APP_NAME}`;
     blog.mdesc = stripHtml(body.substring(0, 160));
@@ -119,7 +119,7 @@ exports.list = (req, res) => {
           error: errorHandler(err),
         });
       }
-      res.json({ data });
+      res.json(data);
     });
 };
 
@@ -205,7 +205,6 @@ exports.remove = (req, res) => {
   });
 };
 
-//////////////////////
 exports.update = (req, res) => {
   const slug = req.params.slug.toLowerCase();
 
@@ -261,7 +260,7 @@ exports.update = (req, res) => {
             error: errorHandler(err),
           });
         }
-        //result.photo = undefined;
+        // result.photo = undefined;
         res.json(result);
       });
     });
@@ -284,13 +283,14 @@ exports.photo = (req, res) => {
 };
 
 exports.listRelated = (req, res) => {
+  // console.log(req.body.blog);
   let limit = req.body.limit ? parseInt(req.body.limit) : 3;
   const { _id, categories } = req.body.blog;
 
   Blog.find({ _id: { $ne: _id }, categories: { $in: categories } })
     .limit(limit)
-    .populate("postedBy", "_id")
-    .select("title slug excerpt postedBy, createdAt updatedAt")
+    .populate("postedBy", "_id name profile")
+    .select("title slug excerpt postedBy createdAt updatedAt")
     .exec((err, blogs) => {
       if (err) {
         return res.status(400).json({
@@ -301,7 +301,9 @@ exports.listRelated = (req, res) => {
     });
 };
 
+//
 exports.listSearch = (req, res) => {
+  console.log(req.query);
   const { search } = req.query;
   if (search) {
     Blog.find(
