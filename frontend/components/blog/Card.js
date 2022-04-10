@@ -1,5 +1,5 @@
 import Link from "next/link";
-import renderHtml from "react-render-html";
+import renderHTML from "react-render-html";
 import moment from "moment";
 import { API } from "../../config";
 
@@ -29,8 +29,11 @@ const Card = ({ blog }) => {
       </header>
       <section>
         <p className='mark ml-1 pt-2 pb-2'>
-          Written by {blog.postedBy.name} | Published{" "}
-          {moment(blog.updatedAt).fromNow()}
+          Written by{" "}
+          <Link href={`/profile/${blog.postedBy.username}`}>
+            <a>{blog.postedBy.username}</a>
+          </Link>{" "}
+          | Published {moment(blog.updatedAt).fromNow()}
         </p>
       </section>
       <section>
@@ -48,12 +51,12 @@ const Card = ({ blog }) => {
               style={{ maxHeight: "auto", width: "100%" }}
               src={`${API}/blog/photo/${blog.slug}`}
               alt={blog.title}
-            ></img>
+            />
           </section>
         </div>
         <div className='col-md-8'>
           <section>
-            <div className='pb-3'>{renderHtml(blog.excerpt)}</div>
+            <div className='pb-3'>{renderHTML(blog.excerpt)}</div>
             <Link href={`/blogs/${blog.slug}`}>
               <a className='btn btn-primary pt-2'>Read more</a>
             </Link>
