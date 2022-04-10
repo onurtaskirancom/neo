@@ -7,6 +7,7 @@ import { API, DOMAIN, APP_NAME, FB_APP_ID } from "../../config";
 import renderHtml from "react-render-html";
 import moment from "moment";
 import SmallCard from "../../components/blog/SmallCard";
+import DisqusThread from "../../components/DisqusThread";
 
 const SingleBlog = ({ blog, query }) => {
   const [related, setRelated] = useState([]);
@@ -47,7 +48,7 @@ const SingleBlog = ({ blog, query }) => {
       <meta property='fb:app_id' content={`${FB_APP_ID}`} />
     </Head>
   );
-  
+
   const showBlogCategories = (blog) =>
     blog.categories.map((c, i) => (
       <Link key={i} href={`/categories/${c.slug}`}>
@@ -72,6 +73,18 @@ const SingleBlog = ({ blog, query }) => {
     ));
   };
 
+  const showComments = () => {
+    return (
+      <div>
+        <DisqusThread
+          id={blog.id}
+          title={blog.title}
+          path={`/blog/${blog.slug}`}
+        />
+      </div>
+    );
+  };
+
   return (
     <React.Fragment>
       {head()}
@@ -94,8 +107,11 @@ const SingleBlog = ({ blog, query }) => {
                     {blog.title}
                   </h1>
                   <p className='lead mt-3 mark'>
-                    Written by <Link href={`/profile/${blog.postedBy.username}`}><a>{blog.postedBy.username}</a></Link> | Published{" "}
-                    {moment(blog.updatedAt).fromNow()}
+                    Written by{" "}
+                    <Link href={`/profile/${blog.postedBy.username}`}>
+                      <a>{blog.postedBy.username}</a>
+                    </Link>{" "}
+                    | Published {moment(blog.updatedAt).fromNow()}
                   </p>
 
                   <div className='pb-3'>
@@ -117,8 +133,8 @@ const SingleBlog = ({ blog, query }) => {
               <br />
               <div className='row'>{showRelatedBlog()}</div>
             </div>
-            <div className='container pb-5'>
-              <p>Show comments</p>
+            <div className='container pt-5 pb-5'>
+              {showComments()}
             </div>
           </article>
         </main>
